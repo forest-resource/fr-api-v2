@@ -1,6 +1,8 @@
 ﻿using fr.Core.Timing;
+using fr.Database.Model.Entities.Users;
 using fr.Database.Model.Interfaces;
 using fr.Database.Services;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
@@ -10,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace fr.Database.EntityFramework
 {
-    public class AppDbContextBase : DbContext
+    public class AppDbContextBase : IdentityDbContext<Users, Roles, Guid>
     {
         private IAuditService AuditService { get; set; }
         public AppDbContextBase(DbContextOptions options, IAuditService auditService) : base(options)

@@ -20,22 +20,22 @@ namespace fr.AppServer.Infrastructor.Configurations
                     Version = "v1"
                 });
 
-                action.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-                {
-                    Type = SecuritySchemeType.OAuth2,
-                    Flows = new OpenApiOAuthFlows
-                    {
-                        AuthorizationCode = new OpenApiOAuthFlow
-                        {
-                            AuthorizationUrl = new Uri("https://localhost:44345/connect/authorize"),
-                            TokenUrl = new Uri("https://localhost:44345/connect/token"),
-                            Scopes = new Dictionary<string, string>
-                            {
-                                { "api1", $"{ApplicationApi} API - full access" }
-                            }
-                        }
-                    }
-                });
+                //action.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                //{
+                //    Type = SecuritySchemeType.OAuth2,
+                //    Flows = new OpenApiOAuthFlows
+                //    {
+                //        AuthorizationCode = new OpenApiOAuthFlow
+                //        {
+                //            AuthorizationUrl = new Uri("https://localhost:44345/connect/authorize"),
+                //            TokenUrl = new Uri("https://localhost:44345/connect/token"),
+                //            Scopes = new Dictionary<string, string>
+                //            {
+                //                { "api1", $"{ApplicationApi} API - full access" }
+                //            }
+                //        }
+                //    }
+                //});
                 action.OperationFilter<AuthorizeCheckOperationFilter>();
             });
 
@@ -49,9 +49,9 @@ namespace fr.AppServer.Infrastructor.Configurations
             {
                 action.SwaggerEndpoint("v1/swagger.json", $"{ApplicationApi} v1");
 
-                action.OAuthClientId("demo_api_swagger");
-                action.OAuthAppName("Demo API - Swagger");
-                action.OAuthUsePkce();
+                //action.OAuthClientId("demo_api_swagger");
+                //action.OAuthAppName($"{ApplicationApi} - Swagger");
+                //action.OAuthUsePkce();
             });
 
             return builder;

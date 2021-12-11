@@ -3,9 +3,12 @@ using Autofac.Extensions.DependencyInjection;
 using fr.AppServer.Infrastructor.Configurations;
 using fr.Core.Timing;
 using fr.Database;
+using fr.Database.EntityFramework;
+using fr.Database.Model.Entities.Users;
 using fr.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -33,6 +36,11 @@ namespace fr.AppServer
             services.AddCorsConfiguration(Configuration);
             services.AddGzipCompression();
             services.AddHealthChecks();
+            services.AddEntityFrameworkNpgsql()
+                .AddDbContext<AppDbContext>(opt => opt.UseAppDbContext(Configuration));
+            services.AddIdentity<Users, Roles>()
+                .AddEntityFrameworkStores<AppDbContext>();
+            services.Configure<IdentityBuilder>(Configuration.GetSection("Authentication:Identity"));
 
             services.AddAutoMapper(option =>
             {

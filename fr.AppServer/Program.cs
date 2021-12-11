@@ -31,4 +31,4 @@ var host = Host.CreateDefaultBuilder(args)
 
 host.Initialization();
 
-host.RunAsync();
+host.Run();

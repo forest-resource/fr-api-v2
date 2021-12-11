@@ -9,6 +9,13 @@
     <PackageReference Include="Autofac" Version="6.3.0" />
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\fr.Core\fr.Core.csproj" />
+    <ProjectReference Include="..\fr.Database.Model\fr.Database.Model.csproj" />
+    <ProjectReference Include="..\fr.Database\fr.Database.csproj" />
   </ItemGroup>
 
 </Project>

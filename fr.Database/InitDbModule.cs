@@ -17,6 +17,7 @@ namespace fr.Database
 
             builder.RegisterType<DbContextFactory>()
                 .As<IDesignTimeDbContextFactory<AppDbContext>>()
+                .As<IDesignTimeDbContextFactory>()
                 .InstancePerLifetimeScope();
         }
     }

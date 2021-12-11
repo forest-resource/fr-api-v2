@@ -4,8 +4,10 @@ using System.Linq;
 
 namespace fr.Database.EntityFramework.Configuration
 {
-    public class DirectoryFinder
+    public static class DirectoryFinder
     {
+        private static readonly string SolutionName = "fr-service-app-v2.sln";
+        private static readonly string ApiProjectName = "fr.AppServer";
         public static string CalculateContentRootFolder()
         {
             var appSettingsFile = @"appsettings.json";
@@ -21,12 +23,12 @@ namespace fr.Database.EntityFramework.Configuration
             }
 
             var directoryInfo = new DirectoryInfo(coreAssemblyDirectoryPath);
-            while (!DirectoryContains(directoryInfo.FullName, "fr-service-app-v2.sln"))
+            while (!DirectoryContains(directoryInfo.FullName, SolutionName))
             {
                 directoryInfo = directoryInfo.Parent ?? throw new Exception("Could not find content root folder!");
             }
 
-            var webHostFolder = Path.Combine(directoryInfo.FullName, "fr.AppServer");
+            var webHostFolder = Path.Combine(directoryInfo.FullName, ApiProjectName);
             if (Directory.Exists(webHostFolder))
             {
                 return webHostFolder;

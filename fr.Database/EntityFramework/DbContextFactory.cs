@@ -2,14 +2,32 @@
 using fr.Database.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using System;
 
 namespace fr.Database.EntityFramework
 {
-    public class DbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
+    public interface IDesignTimeDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
+    {
+        DbContext DbContext { get; }
+    }
+
+    public class DbContextFactory : IDesignTimeDbContextFactory
     {
         private readonly IAuditService auditService;
         private AppDbContext _dbContext;
         private readonly object _lockDbContext = new();
+
+        public DbContext DbContext
+        {
+            get
+            {
+                if (_dbContext == null)
+                {
+                    return CreateDbContext(Array.Empty<string>());
+                }
+                return _dbContext;
+            }
+        }
 
         public DbContextFactory(IAuditService auditService)
         {
