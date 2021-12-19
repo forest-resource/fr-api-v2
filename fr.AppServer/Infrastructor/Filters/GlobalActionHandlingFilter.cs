@@ -16,16 +16,14 @@ namespace fr.AppServer.Infrastructor.Filters
 
         public void OnActionExecuted(ActionExecutedContext context)
         {
-            if (context.Result is not ObjectResult objectResult || objectResult.Value is SuccessResponseModel)
+            if (context.Result is ObjectResult objectResult && objectResult.Value is not SuccessResponseModel)
             {
-                return;
+                context.Result = new JsonResult(new SuccessResponseModel
+                {
+                    Status = 200,
+                    Data = objectResult.Value
+                });
             }
-
-            context.Result = new JsonResult(new SuccessResponseModel
-            {
-                Status = 200,
-                Data = objectResult.Value
-            });
         }
 
         public void OnActionExecuting(ActionExecutingContext context)

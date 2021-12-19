@@ -1,13 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.3.0" />
     <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
@@ -16,6 +18,7 @@
     <ProjectReference Include="..\fr.Core\fr.Core.csproj" />
     <ProjectReference Include="..\fr.Database.Model\fr.Database.Model.csproj" />
     <ProjectReference Include="..\fr.Database\fr.Database.csproj" />
+    <ProjectReference Include="..\fr.Service.Model\fr.Service.Model.csproj" />
   </ItemGroup>
 
 </Project>

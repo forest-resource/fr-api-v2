@@ -30,6 +30,7 @@
   <ItemGroup>
     <ProjectReference Include="..\fr.Core\fr.Core.csproj" />
     <ProjectReference Include="..\fr.Database\fr.Database.csproj" />
+    <ProjectReference Include="..\fr.Service.Model\fr.Service.Model.csproj" />
     <ProjectReference Include="..\fr.Service\fr.Service.csproj" />
   </ItemGroup>
 

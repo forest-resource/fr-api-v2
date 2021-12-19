@@ -28,7 +28,7 @@ namespace fr.AppServer.Infrastructor.Configurations
                 cfg.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 cfg.SerializerSettings.Formatting = Formatting.Indented;
                 cfg.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            });
 
             return services;
         }

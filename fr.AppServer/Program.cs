@@ -29,6 +29,6 @@ var host = Host.CreateDefaultBuilder(args)
         webBuilder.UseStartup<Startup>();
     }).Build();
 
-host.Initialization();
+await host.Initialization();
 
-host.Run();
+await host.RunAsync();

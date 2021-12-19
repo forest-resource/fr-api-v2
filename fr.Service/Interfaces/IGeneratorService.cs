@@ -1,6 +1,6 @@
 ﻿namespace fr.Service.Interfaces
 {
-    public interface IGeneratorService<TEntity, TModel>
+    public interface IGeneratorService
     {
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Autofac;
+using fr.Service.Account;
 using fr.Service.Generic;
 using fr.Service.Interfaces;
+using System;
 
 namespace fr.Service
 {
@@ -13,9 +15,12 @@ namespace fr.Service
             builder.RegisterGeneric(typeof(GenericService<,>))
                 .As(typeof(IGenericService<,>))
                 .InstancePerLifetimeScope();
-        }
 
-        private static void RegisterType<Type>(ContainerBuilder builder)
-            => builder.RegisterType<Type>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterAssemblyTypes(AppDomain.CurrentDomain.GetAssemblies())
+                .Where(x => x.IsAssignableTo<IGeneratorService>())
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
+
+        }
     }
 }

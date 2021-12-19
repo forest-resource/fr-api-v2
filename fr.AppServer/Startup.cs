@@ -6,6 +6,7 @@ using fr.Database;
 using fr.Database.EntityFramework;
 using fr.Database.Model.Entities.Users;
 using fr.Service;
+using fr.Service.Model.Account;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -38,13 +39,13 @@ namespace fr.AppServer
             services.AddHealthChecks();
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<AppDbContext>(opt => opt.UseAppDbContext(Configuration));
-            services.AddIdentity<Users, Roles>()
+            services.AddIdentity<User, Roles>()
                 .AddEntityFrameworkStores<AppDbContext>();
             services.Configure<IdentityBuilder>(Configuration.GetSection("Authentication:Identity"));
 
             services.AddAutoMapper(option =>
             {
-
+                option.AddProfile<AccountProfile>();
             });
 
             services.AddAuthConfiguration(Configuration);
@@ -56,7 +57,7 @@ namespace fr.AppServer
             });
         }
 
-        public void ConfigurationBuilder(ContainerBuilder builder)
+        public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterModule<InitDbModule>();
             builder.RegisterModule<InitServiceModule>();

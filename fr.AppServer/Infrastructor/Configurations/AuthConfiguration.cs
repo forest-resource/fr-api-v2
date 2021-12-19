@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Text;
 
 namespace fr.AppServer.Infrastructor.Configurations
 {
@@ -14,14 +17,26 @@ namespace fr.AppServer.Infrastructor.Configurations
 
         public static IServiceCollection AddAuthConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
+            var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Authentication:JwtSettings:Key"]));
+
             services.AddAuthentication(DefaultSchema)
-                .AddJwtBearer(DefaultSchema, options => configuration.Bind("JwtSettings", options))
-                .AddCookie(CookieSchema, options => configuration.Bind("CookieSettings", options))
-                .AddGoogle("Google", options =>
+                .AddJwtBearer(DefaultSchema, options =>
                 {
-                    options.ClientId = configuration["Authentication:Google:ClientId"];
-                    options.ClientSecret = configuration["Authentication:Google:ClientSecret"];
-                });
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        IssuerSigningKey = signinKey,
+                        ValidateAudience = false,
+                        ValidateIssuer = false,
+                        ValidateLifetime = false,
+                        ValidateIssuerSigningKey = true,
+                        ValidateActor = false,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                })
+                .AddGoogle("Google", options => configuration.Bind("Authentication:Google", options));
 
             services.AddAuthorization();
 

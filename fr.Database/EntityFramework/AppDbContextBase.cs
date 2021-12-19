@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace fr.Database.EntityFramework
 {
-    public class AppDbContextBase : IdentityDbContext<Users, Roles, Guid>
+    public abstract class AppDbContextBase : IdentityDbContext<User, Roles, Guid>
     {
         private IAuditService AuditService { get; set; }
         public AppDbContextBase(DbContextOptions options, IAuditService auditService) : base(options)
