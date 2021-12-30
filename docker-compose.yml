@@ -1,0 +1,7 @@
+version: '1.0.0'
+services:
+  api:
+    image: fr/service
+    build:
+      context: .
+      dockerfile: fr.AppServer/Dockerfile

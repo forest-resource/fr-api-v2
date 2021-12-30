@@ -20,7 +20,7 @@ namespace fr.AppServer.Infrastructor.Configurations
             var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Authentication:JwtSettings:Key"]));
 
             services.AddAuthentication(DefaultSchema)
-                .AddJwtBearer(DefaultSchema, options =>
+                .AddJwtBearer(options =>
                 {
                     options.RequireHttpsMetadata = false;
                     options.SaveToken = true;
@@ -28,15 +28,15 @@ namespace fr.AppServer.Infrastructor.Configurations
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         IssuerSigningKey = signinKey,
+                        ValidateIssuerSigningKey = true,
                         ValidateAudience = false,
                         ValidateIssuer = false,
-                        ValidateLifetime = false,
-                        ValidateIssuerSigningKey = true,
+                        ValidateLifetime = true,
                         ValidateActor = false,
-                        ClockSkew = TimeSpan.Zero
+
+                        NameClaimType = "name"
                     };
-                })
-                .AddGoogle("Google", options => configuration.Bind("Authentication:Google", options));
+                });
 
             services.AddAuthorization();
 

@@ -1,6 +1,5 @@
 ﻿using fr.AppServer.Infrastructor.Filters;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -20,6 +19,7 @@ namespace fr.AppServer.Infrastructor.Configurations
             services.AddControllers(cfg =>
             {
                 //cfg.Filters.Add<IndicatorAuthorizationFilter>();
+                cfg.Filters.Add<GlobalAuthorizationHandlingFilter>();
                 cfg.Filters.Add<GlobalActionHandlingFilter>();
                 cfg.Filters.Add<GlobalExceptionHandlingFilter>();
             }).AddNewtonsoftJson(cfg =>

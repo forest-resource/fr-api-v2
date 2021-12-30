@@ -12,7 +12,5 @@ namespace fr.Service.Account
         Task SeedAdminAccount(string adminUsername, string adminPassword);
         Task SeedAllRoles();
         Task<UserProfile> LoginAsync(LoginModel model);
-
-        string CreateToken(UserProfile profile, IEnumerable<Claim> claims);
     }
 }

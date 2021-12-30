@@ -1,0 +1,30 @@
+version: '1.0.0'
+
+x-common-variables: &common-variables
+  ENVIRONMENT_NAME: docker
+
+services:
+  api:
+    image: nnvu/fr-service
+    environment:
+      <<: *common-variables
+    build:
+      context: .
+      dockerfile: fr.AppServer/Dockerfile
+      args:
+        <<: *common-variables
+    ports:
+      - "5000:80"
+      - "5001:443"
+    depends_on:
+      - "db"
+      
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: LZPxLbCtnkk8jcnI4VJH
+      POSTGRES_USER: docker
+      POSTGRES_DB: fr-database

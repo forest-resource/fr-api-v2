@@ -4,6 +4,7 @@ using fr.Core.Enumeration;
 using fr.Core.Exceptions;
 using fr.Core.Timing;
 using fr.Database.Model.Entities.Users;
+using fr.Service.jwtService;
 using fr.Service.Model.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -24,16 +25,19 @@ namespace fr.Service.Account
         private readonly UserManager<User> userManager;
         private readonly RoleManager<Roles> roleManager;
         private readonly IConfiguration configuration;
+        private readonly IJwtService jwtService;
         public AccountService(
             IMapper mapper,
             IConfiguration configuration,
             UserManager<User> userManager,
-            RoleManager<Roles> roleManager)
+            RoleManager<Roles> roleManager,
+            IJwtService jwtService)
         {
             this.userManager = userManager;
             this.mapper = mapper;
             this.configuration = configuration;
             this.roleManager = roleManager;
+            this.jwtService = jwtService;
         }
 
         public async Task<UserProfile> LoginAsync(LoginModel model)
@@ -80,7 +84,7 @@ namespace fr.Service.Account
             claims = claims.Distinct().Where(r => r.Value == EAllowType.Allow.ToString());
             userProfile.Claims = claims.Select(r => r.Type).ToList();
             userProfile.Schema = Constants.DefaultSchema;
-            userProfile.Token = CreateToken(userProfile, claims);
+            userProfile.Token = jwtService.CreateToken(userProfile, claims);
 
             return userProfile;
         }
@@ -106,12 +110,36 @@ namespace fr.Service.Account
                 return null;
             }
 
-            var result = mapper.Map<UserProfile>(user);
+            var addToRoleResult = await userManager.AddToRoleAsync(user, ERoles.Student.ToString());
 
-            result.Schema = "Beader";
-            result.Token = await userManager.GenerateUserTokenAsync(user, result.Schema, configuration["Secret"]);
+            if (addToRoleResult == null || !addToRoleResult.Succeeded)
+            {
+                return null;
+            }
 
-            return result;
+            // Map user to UserProfile before return
+            var userProfile = mapper.Map<User, UserProfile>(user);
+            userProfile.Roles = (await userManager.GetRolesAsync(user)).ToList();
+
+            // Get User Claims
+            var claims = (await userManager.GetClaimsAsync(user)).AsEnumerable();
+            // Get Roles Claims
+            foreach (var roleName in userProfile.Roles)
+            {
+                // Get role of Users from roleName
+                var role = await roleManager.FindByNameAsync(roleName);
+                // Get Claims of the role
+                var roleClaims = await roleManager.GetClaimsAsync(role);
+                // Union with the userClaims
+                claims = claims.Union(roleClaims.Where(r => r.Value == EAllowType.Allow.ToString()));
+            }
+            // Select only claim which is allow for user
+            claims = claims.Distinct().Where(r => r.Value == EAllowType.Allow.ToString());
+            userProfile.Claims = claims.Select(r => r.Type).ToList();
+            userProfile.Schema = Constants.DefaultSchema;
+            userProfile.Token = jwtService.CreateToken(userProfile, claims);
+
+            return userProfile;
         }
 
         public async Task SeedAdminAccount(string adminUsername, string adminPassword)
@@ -171,20 +199,6 @@ namespace fr.Service.Account
                     await roleManager.AddClaimAsync(role, new Claim(permission, EAllowType.Allow.ToString()));
                 }
             }
-        }
-
-        public string CreateToken(UserProfile profile, IEnumerable<Claim> claims)
-        {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Authentication:JwtSettings:Key"]));
-            var credential = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            var jwtSecurityToken = new JwtSecurityToken(
-                configuration["Authentication:JwtSettings:Issuer"],
-                configuration["Authentication:JwtSettings:Issuer"],
-                claims.Union(new List<Claim> { new Claim(ClaimTypes.Name, profile.Email), new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) }),
-                expires: Clock.Now.AddHours(2),
-                signingCredentials: credential);
-
-            return new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
         }
     }
 }

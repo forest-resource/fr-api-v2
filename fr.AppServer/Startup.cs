@@ -6,13 +6,16 @@ using fr.Database;
 using fr.Database.EntityFramework;
 using fr.Database.Model.Entities.Users;
 using fr.Service;
+using fr.Service.Model;
 using fr.Service.Model.Account;
+using fr.Service.Model.Icons;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Security.Claims;
 
 namespace fr.AppServer
 {
@@ -39,18 +42,22 @@ namespace fr.AppServer
             services.AddHealthChecks();
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<AppDbContext>(opt => opt.UseAppDbContext(Configuration));
-            services.AddIdentity<User, Roles>()
-                .AddEntityFrameworkStores<AppDbContext>();
-            services.Configure<IdentityBuilder>(Configuration.GetSection("Authentication:Identity"));
+            services.AddIdentity<User, Roles>(cfg =>
+            {
+                cfg.ClaimsIdentity.UserNameClaimType = ClaimTypes.Name;
+                cfg.ClaimsIdentity.EmailClaimType = ClaimTypes.Email;
+            }).AddEntityFrameworkStores<AppDbContext>();
 
             services.AddAutoMapper(option =>
             {
                 option.AddProfile<AccountProfile>();
+                option.AddProfile<IconProfile>();
+                option.AddProfile<OtherProfile>();
             });
 
+            services.AddControllersConfiguration();
             services.AddAuthConfiguration(Configuration);
             services.AddSwaggerConfiguration();
-            services.AddControllersConfiguration();
             services.AddMvc(cfg =>
             {
                 cfg.EnableEndpointRouting = false;
@@ -83,9 +90,8 @@ namespace fr.AppServer
             app.UseHttpsRedirection();
             app.UseHealthChecks("/health");
             AutofacContainer = app.ApplicationServices.GetAutofacRoot();
-            app.UseAuthConfiguration();
             app.UseControllersConfiguration();
-            app.UseMvcWithDefaultRoute();
+            app.UseAuthConfiguration();
         }
     }
 }

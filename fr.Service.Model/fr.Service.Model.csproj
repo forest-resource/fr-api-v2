@@ -9,9 +9,12 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.13" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\fr.Core\fr.Core.csproj" />
     <ProjectReference Include="..\fr.Database.Model\fr.Database.Model.csproj" />
   </ItemGroup>
 

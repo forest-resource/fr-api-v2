@@ -5,18 +5,21 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using System.Net;
 
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration((hostBuilder, config) =>
     {
         config.Sources.Clear();
+        config.AddEnvironmentVariables();
 
-        var env = hostBuilder.HostingEnvironment;
+        var configuration = config.Build();
+        var envName = configuration.GetValue("ENVIRONMENT_NAME", hostBuilder.HostingEnvironment.EnvironmentName);
+        
+        Log.Information(envName);
 
         config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-        config.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: false, reloadOnChange: true);
-
-        config.AddEnvironmentVariables();
+        config.AddJsonFile($"appsettings.{envName}.json", optional: true, reloadOnChange: true);
 
         if (args.Length > 0)
         {
@@ -26,8 +29,10 @@ var host = Host.CreateDefaultBuilder(args)
     .UseServiceProviderFactory(new AutofacServiceProviderFactory())
     .ConfigureWebHostDefaults(webBuilder =>
     {
+        webBuilder.UseKestrel(options => options.ListenAnyIP(5000));
         webBuilder.UseStartup<Startup>();
-    }).Build();
+    })
+    .Build();
 
 await host.Initialization();
 

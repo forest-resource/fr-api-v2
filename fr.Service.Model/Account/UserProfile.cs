@@ -12,5 +12,7 @@
         public string Schema { get; set; }
         public List<string> Roles { get; set; }
         public List<string> Claims { get; set; }
+
+        public string FullName { get => $"{FirstName} {LastName}".Trim(); }
     }
 }
