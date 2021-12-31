@@ -1,27 +1,28 @@
 ﻿using fr.Database.Model.Abstracts;
-using fr.Database.Model.Entities.Trees;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace fr.Database.Model.Entities.Icons
+namespace fr.Database.Model.Entities.Trees
 {
-    [Table(nameof(Icon), Schema = "Icon")]
-    public class Icon : FullEntityModel
+    [Table(nameof(TreeDetail), Schema = "Tree")]
+    public class TreeDetail : FullEntityModel
     {
         private Tree tree;
         private readonly ILazyLoader loader;
 
-        public Icon(ILazyLoader loader)
+        public TreeDetail(ILazyLoader loader)
         {
             this.loader = loader;
         }
 
         [Required]
-        public string IconName { get; set; }
+        public string Key { get; set; }
         [Required]
-        public string IconData { get; set; }
+        public string Value { get; set; }
 
+        public Guid TreeId { get; set; }
         public virtual Tree Tree
         {
             get => tree ?? loader.Load(this, ref tree);

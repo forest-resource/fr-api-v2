@@ -1,6 +1,7 @@
 ﻿using fr.Database.Model.Interfaces;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace fr.Database.Model.Abstracts
 {
@@ -8,6 +9,7 @@ namespace fr.Database.Model.Abstracts
     {
         [Key]
         [Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
         [Required]

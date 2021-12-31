@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using fr.Database.EntityFramework;
@@ -11,9 +12,10 @@ using fr.Database.EntityFramework;
 namespace fr.Database.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211231040852_AddTreeModel")]
+    partial class AddTreeModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,104 +64,6 @@ namespace fr.Database.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Icon", "Icon");
-                });
-
-            modelBuilder.Entity("fr.Database.Model.Entities.Plots.Plot", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("DeletedTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsCurrent")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("PlotName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("UpdatedTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PlotName")
-                        .IsUnique();
-
-                    b.ToTable("Plot", "Plot");
-                });
-
-            modelBuilder.Entity("fr.Database.Model.Entities.Plots.PlotPoint", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("DeletedTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid>("PlotId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("TreeId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("UpdatedTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<double>("X")
-                        .HasColumnType("double precision");
-
-                    b.Property<double>("Y")
-                        .HasColumnType("double precision");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PlotId");
-
-                    b.HasIndex("TreeId");
-
-                    b.ToTable("PlotPoint", "Plot");
                 });
 
             modelBuilder.Entity("fr.Database.Model.Entities.Trees.Tree", b =>
@@ -510,25 +414,6 @@ namespace fr.Database.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("fr.Database.Model.Entities.Plots.PlotPoint", b =>
-                {
-                    b.HasOne("fr.Database.Model.Entities.Plots.Plot", "Plot")
-                        .WithMany("PlotPoints")
-                        .HasForeignKey("PlotId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("fr.Database.Model.Entities.Trees.Tree", "Tree")
-                        .WithMany()
-                        .HasForeignKey("TreeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Plot");
-
-                    b.Navigation("Tree");
-                });
-
             modelBuilder.Entity("fr.Database.Model.Entities.Trees.Tree", b =>
                 {
                     b.HasOne("fr.Database.Model.Entities.Icons.Icon", "Icon")
@@ -603,11 +488,6 @@ namespace fr.Database.Migrations
             modelBuilder.Entity("fr.Database.Model.Entities.Icons.Icon", b =>
                 {
                     b.Navigation("Tree");
-                });
-
-            modelBuilder.Entity("fr.Database.Model.Entities.Plots.Plot", b =>
-                {
-                    b.Navigation("PlotPoints");
                 });
 
             modelBuilder.Entity("fr.Database.Model.Entities.Trees.Tree", b =>
