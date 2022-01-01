@@ -20,8 +20,8 @@ namespace fr.AppServer.Controllers.Abstracts
 
         protected ControllerBase(IMapper mapper, IGenericService<TEntity, TResponseModel> service)
         {
-            this.Mapper = mapper;
-            this.Service = service;
+            Mapper = mapper;
+            Service = service;
         }
 
         public virtual Task<TResponseModel> CreateAsync(TRequestModel model)
@@ -40,6 +40,6 @@ namespace fr.AppServer.Controllers.Abstracts
             => Service.GetManyAsync(MapFromModel(model ?? default));
 
         protected ExpressionRule MapFromModel(TSearchModel model)
-            => Mapper.Map<TSearchModel, ExpressionRule>(model);
+            => Mapper.Map<object, ExpressionRule>(model as object);
     }
 }

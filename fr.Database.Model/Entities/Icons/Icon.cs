@@ -12,6 +12,10 @@ namespace fr.Database.Model.Entities.Icons
         private Tree tree;
         private readonly ILazyLoader loader;
 
+        public Icon()
+        {
+
+        }
         public Icon(ILazyLoader loader)
         {
             this.loader = loader;
@@ -24,7 +28,7 @@ namespace fr.Database.Model.Entities.Icons
 
         public virtual Tree Tree
         {
-            get => tree ?? loader.Load(this, ref tree);
+            get => tree ?? loader?.Load(this, ref tree) ?? null;
             set => tree = value;
         }
     }

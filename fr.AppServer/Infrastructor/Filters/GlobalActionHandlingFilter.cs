@@ -31,7 +31,7 @@ namespace fr.AppServer.Infrastructor.Filters
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            this.auditService.UserName = context.HttpContext.User.Identity.Name ?? "Anonymous";
+            auditService.UserName = context.HttpContext.User.Identity.Name ?? "Anonymous";
             logger.LogInformation($"Action '{context.ActionDescriptor.DisplayName}' executing");
         }
     }

@@ -32,7 +32,7 @@ namespace fr.AppServer.Infrastructor.Filters
                     new ErrorResponseModel
                     {
                         Status = 401,
-                        Code = "UNAUTHORIZED",
+                        Code = "UNAUTHORIZE",
                         Message = "Unauthorize"
                     });
                 return;
@@ -46,7 +46,7 @@ namespace fr.AppServer.Infrastructor.Filters
                     new ErrorResponseModel
                     {
                         Status = 401,
-                        Code = "UNAUTHORIZED",
+                        Code = "UNAUTHORIZE",
                         Message = "Unauthorize"
                     });
                 return;
@@ -54,6 +54,18 @@ namespace fr.AppServer.Infrastructor.Filters
 
             var token = authorizationArray[1];
             var tokenValidationResult = jwtService.ValidateToken(token);
+
+            if (!tokenValidationResult.IsValid)
+            {
+                context.Result = new OkObjectResult(
+                    new ErrorResponseModel
+                    {
+                        Status = 401,
+                        Code = "UNAUTHORIZE",
+                        Message = "Unauthorize"
+                    });
+                return;
+            }
 
             context.HttpContext.User = new ClaimsPrincipal(tokenValidationResult.ClaimsIdentity);
         }

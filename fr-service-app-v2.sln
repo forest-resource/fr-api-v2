@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "fr.Database.Model", "fr.Dat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "fr.Core", "fr.Core\fr.Core.csproj", "{669079B2-DAF1-45A7-9858-A4ED1DE504C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fr.Service.Model", "fr.Service.Model\fr.Service.Model.csproj", "{ED75664D-4668-4F94-9F2A-BA26CE9D1688}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "fr.Service.Model", "fr.Service.Model\fr.Service.Model.csproj", "{ED75664D-4668-4F94-9F2A-BA26CE9D1688}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

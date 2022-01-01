@@ -9,7 +9,7 @@ namespace fr.Service.Model
         public OtherProfile()
         {
             CreateMap<object, ExpressionRule>()
-                .ConvertUsing(o => JsonConvert.DeserializeObject<ExpressionRule>(JsonConvert.SerializeObject(o)));
+                .ConvertUsing(o => JsonConvert.DeserializeObject<ExpressionRule>(JsonConvert.SerializeObject(o)) ?? new());
         }
     }
 }

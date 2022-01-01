@@ -2,7 +2,7 @@
 using fr.AppServer.Controllers.Abstracts;
 using fr.Database.Model.Entities.Icons;
 using fr.Service.FileService;
-using fr.Service.Interfaces;
+using fr.Service.IconService;
 using fr.Service.Model;
 using fr.Service.Model.Icons;
 using Microsoft.AspNetCore.Mvc;
@@ -17,15 +17,21 @@ namespace fr.AppServer.Controllers
     public class IconsController : ControllerBase<Icon, IconCreateUpdateModel, IconModel, IconSearchModel>
     {
         private readonly IFileService fileService;
-        public IconsController(IMapper mapper, IGenericService<Icon, IconModel> service, IFileService fileService)
+        private readonly IIconService iconService;
+        public IconsController(IMapper mapper, IIconService service, IFileService fileService)
             : base(mapper, service)
         {
             this.fileService = fileService;
+            iconService = service;
         }
 
         [HttpGet]
         public Task<IEnumerable<IconModel>> GetIconsAsync([FromQuery] IconSearchModel model)
             => base.GetManyAsync(model);
+
+        [HttpGet("get-available-icons")]
+        public Task<IEnumerable<IconModel>> GetAvailableIconsAsync()
+            => iconService.GetAvailableIconsAsync();
 
         [HttpGet("{id}")]
         public Task<IconModel> GetIconAsync([FromRoute] Guid id)
@@ -45,6 +51,6 @@ namespace fr.AppServer.Controllers
 
         [HttpPost("upladFile")]
         public Task<bool> UploadFile([FromForm] FileModel model)
-            => this.fileService.CalcSvgFile(model.File);
+            => fileService.CalcSvgFile(model.File);
     }
 }

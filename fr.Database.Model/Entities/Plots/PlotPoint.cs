@@ -8,12 +8,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace fr.Database.Model.Entities.Plots
 {
     [Table(nameof(PlotPoint), Schema = "Plot")]
-    public class PlotPoint : FullEntityModel
+    public class PlotPoint : HardDeleteEntityModel
     {
         private Plot plot;
         private Tree tree;
         private readonly ILazyLoader loader;
 
+        public PlotPoint()
+        {
+
+        }
         public PlotPoint(ILazyLoader loader)
         {
             this.loader = loader;

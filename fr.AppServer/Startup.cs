@@ -9,6 +9,7 @@ using fr.Service;
 using fr.Service.Model;
 using fr.Service.Model.Account;
 using fr.Service.Model.Icons;
+using fr.Service.Model.Trees;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -50,9 +51,10 @@ namespace fr.AppServer
 
             services.AddAutoMapper(option =>
             {
+                option.AddProfile<OtherProfile>();
                 option.AddProfile<AccountProfile>();
                 option.AddProfile<IconProfile>();
-                option.AddProfile<OtherProfile>();
+                option.AddProfile<TreeProfile>();
             });
 
             services.AddControllersConfiguration();

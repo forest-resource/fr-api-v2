@@ -29,7 +29,7 @@ var host = Host.CreateDefaultBuilder(args)
     .UseServiceProviderFactory(new AutofacServiceProviderFactory())
     .ConfigureWebHostDefaults(webBuilder =>
     {
-        webBuilder.UseKestrel(options => options.ListenAnyIP(5000));
+        webBuilder.UseIISIntegration();
         webBuilder.UseStartup<Startup>();
     })
     .Build();

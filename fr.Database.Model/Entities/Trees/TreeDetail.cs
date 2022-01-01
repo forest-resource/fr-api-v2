@@ -7,11 +7,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace fr.Database.Model.Entities.Trees
 {
     [Table(nameof(TreeDetail), Schema = "Tree")]
-    public class TreeDetail : FullEntityModel
+    public class TreeDetail : HardDeleteEntityModel
     {
         private Tree tree;
         private readonly ILazyLoader loader;
 
+        public TreeDetail()
+        {
+
+        }
         public TreeDetail(ILazyLoader loader)
         {
             this.loader = loader;

@@ -14,6 +14,11 @@ namespace fr.Database.Model.Entities.Plots
         private ICollection<PlotPoint> plotPoints;
         private readonly ILazyLoader loader;
 
+        public Plot()
+        {
+
+        }
+
         public Plot(ILazyLoader loader)
         {
             this.loader = loader;

@@ -15,9 +15,13 @@ namespace fr.Database.Model.Entities.Trees
         private ICollection<TreeDetail> treeDetails;
         private readonly ILazyLoader loader;
 
+        public Tree()
+        {
+
+        }
         public Tree(ILazyLoader lazyLoader)
         {
-            this.loader = lazyLoader;
+            loader = lazyLoader;
         }
 
         [Required]

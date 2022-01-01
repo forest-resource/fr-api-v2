@@ -4,8 +4,6 @@ namespace fr.Core.Expressions
 {
     public static class ExpressionConstants
     {
-        public static readonly string Host = "https://localhost:44345";
-
         public static MethodInfo MethodStringContains
             = typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) });
         public static MethodInfo MethodStringStartsWith
@@ -19,4 +17,3 @@ namespace fr.Core.Expressions
         public static string Id { get => nameof(Id).ToLower(); }
     }
 }
-    
