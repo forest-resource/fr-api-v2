@@ -15,8 +15,7 @@ namespace fr.Service.Model.Trees
             CreateMap<TreeDetail, TreeDetailModel>()
                 .ForMember(r => r.Id, source => source.MapFrom(r => r.Id))
                 .ForMember(r => r.Key, source => source.MapFrom(r => r.Key))
-                .ForMember(r => r.Value, source => source.MapFrom(r => r.Value))
-                .ForAllOtherMembers(source => source.Ignore());
+                .ForMember(r => r.Value, source => source.MapFrom(r => r.Value));
 
             CreateMap<TreeCreateAndUpdateModel, Tree>()
                 .ForMember(r => r.CommonName, source => source.MapFrom(r => r.CommonName))
@@ -44,8 +43,7 @@ namespace fr.Service.Model.Trees
                 .ForMember(r => r.ScienceName, source => source.MapFrom(r => r.ScienceName))
                 .ForMember(r => r.IconId, source => source.MapFrom(r => r.IconId))
                 .ForMember(r => r.IconData, source => source.MapFrom(r => r.Icon.IconData))
-                .ForMember(r => r.TreeDetails, source => source.MapFrom(r => r.TreeDetails))
-                .ForAllOtherMembers(source => source.Ignore());
+                .ForMember(r => r.TreeDetails, source => source.MapFrom(r => r.TreeDetails));
         }
     }
 }

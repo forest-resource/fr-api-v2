@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="fr.Database.Model.Entities.Icons.Icon">
+    <Position X="1" Y="2" Width="1.5" />
+    <Members>
+      <Method Name="Icon" Hidden="true" />
+      <Field Name="loader" Hidden="true" />
+      <Field Name="tree" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAABgAAAAAAAAQAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Icons\Icon.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="fr.Database.Model.Entities.Plots.Plot">
+    <Position X="3.25" Y="2" Width="1.5" />
+    <Members>
+      <Field Name="loader" Hidden="true" />
+      <Method Name="Plot" Hidden="true" />
+      <Field Name="plotPoints" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAABAAAAAAAARAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Plots\Plot.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="fr.Database.Model.Entities.Plots.PlotPoint">
+    <Position X="5.25" Y="2" Width="1.5" />
+    <Members>
+      <Field Name="loader" Hidden="true" />
+      <Field Name="plot" Hidden="true" />
+      <Method Name="PlotPoint" Hidden="true" />
+      <Field Name="tree" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAEABgAAgAAAAAAAAAAQAAAAEAAAAYIA=</HashCode>
+      <FileName>Entities\Plots\PlotPoint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
