@@ -24,11 +24,17 @@ namespace fr.Database.Model.Entities.Plots
         }
 
         [Required]
+        public string Sub { get; set; }
+        [Required]
         public string Code { get; set; }
         [Required]
         public double X { get; set; }
         [Required]
         public double Y { get; set; }
+        [Required]
+        public double Diameter { get; set; }
+        [Required]
+        public double Height { get; set; }
 
         [Required]
         public Guid PlotId { get; set; }

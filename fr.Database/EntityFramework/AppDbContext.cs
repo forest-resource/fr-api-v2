@@ -18,5 +18,19 @@ namespace fr.Database.EntityFramework
             : base(options, auditService)
         {
         }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<Plot>()
+                .HasMany(r => r.PlotPoints)
+                .WithOne(r => r.Plot)
+                .HasForeignKey(r => r.PlotId);
+
+            builder.Entity<Tree>()
+                .HasMany(r => r.TreeDetails)
+                .WithOne(r => r.Tree)
+                .HasForeignKey(r => r.TreeId);
+        }
     }
 }

@@ -22,23 +22,23 @@ namespace fr.AppServer.Controllers
         }
 
         [HttpGet]
-        public Task<IEnumerable<TreeModel>> GetManyAsync([FromQuery] TreeSearchModel searchModel)
+        public override Task<IEnumerable<TreeModel>> GetManyAsync([FromQuery] TreeSearchModel searchModel)
             => base.GetManyAsync(searchModel);
 
         [HttpPost]
-        public Task<TreeModel> CreateAsync([FromBody] TreeCreateAndUpdateModel model)
+        public override Task<TreeModel> CreateAsync([FromBody] TreeCreateAndUpdateModel model)
             => base.CreateAsync(model);
 
         [HttpGet("{id}")]
-        public Task<TreeModel> GetOneAsync([FromRoute] Guid id)
+        public override Task<TreeModel> GetOneAsync([FromRoute] Guid id)
             => base.GetOneAsync(id);
 
         [HttpPut("{id}")]
-        public Task<TreeModel> UpdateAsync([FromRoute] Guid id, [FromBody] TreeCreateAndUpdateModel model)
+        public override Task<TreeModel> UpdateAsync([FromRoute] Guid id, [FromBody] TreeCreateAndUpdateModel model)
             => base.UpdateAsync(id, model);
 
         [HttpDelete("{id}")]
-        public Task<TreeModel> DeleteAsync([FromRoute] Guid id)
+        public override Task<TreeModel> DeleteAsync([FromRoute] Guid id)
             => base.DeleteAsync(id);
     }
 }

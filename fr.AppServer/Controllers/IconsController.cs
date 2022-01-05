@@ -26,28 +26,28 @@ namespace fr.AppServer.Controllers
         }
 
         [HttpGet]
-        public Task<IEnumerable<IconModel>> GetIconsAsync([FromQuery] IconSearchModel model)
+        public override Task<IEnumerable<IconModel>> GetManyAsync([FromQuery] IconSearchModel model)
             => base.GetManyAsync(model);
+
+        [HttpGet("{id}")]
+        public override Task<IconModel> GetOneAsync([FromRoute] Guid id)
+            => base.GetOneAsync(id);
+
+        [HttpPost]
+        public override Task<IconModel> CreateAsync([FromBody] IconCreateUpdateModel model)
+            => base.CreateAsync(model);
+
+        [HttpPut("{id}")]
+        public override Task<IconModel> UpdateAsync([FromRoute] Guid id, [FromBody] IconCreateUpdateModel model)
+            => base.UpdateAsync(id, model);
+
+        [HttpDelete("{id}")]
+        public override Task<IconModel> DeleteAsync([FromRoute] Guid id)
+            => base.DeleteAsync(id);
 
         [HttpGet("get-available-icons")]
         public Task<IEnumerable<IconModel>> GetAvailableIconsAsync()
             => iconService.GetAvailableIconsAsync();
-
-        [HttpGet("{id}")]
-        public Task<IconModel> GetIconAsync([FromRoute] Guid id)
-            => base.GetOneAsync(id);
-
-        [HttpPost]
-        public Task<IconModel> CreateIconAsync([FromBody] IconCreateUpdateModel model)
-            => base.CreateAsync(model);
-
-        [HttpPut("{id}")]
-        public Task<IconModel> UpdateIconAsync([FromRoute] Guid id, [FromBody] IconCreateUpdateModel model)
-            => base.UpdateAsync(id, model);
-
-        [HttpDelete("{id}")]
-        public Task DeleteIconAsync([FromRoute] Guid id)
-            => base.DeleteAsync(id);
 
         [HttpPost("upladFile")]
         public Task<bool> UploadFile([FromForm] FileModel model)

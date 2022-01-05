@@ -9,6 +9,7 @@ using fr.Service;
 using fr.Service.Model;
 using fr.Service.Model.Account;
 using fr.Service.Model.Icons;
+using fr.Service.Model.Plots;
 using fr.Service.Model.Trees;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -55,6 +56,7 @@ namespace fr.AppServer
                 option.AddProfile<AccountProfile>();
                 option.AddProfile<IconProfile>();
                 option.AddProfile<TreeProfile>();
+                option.AddProfile<PlotProfile>();
             });
 
             services.AddControllersConfiguration();

@@ -26,7 +26,12 @@ namespace fr.Database.Model.Entities.Plots
 
         [Required]
         public string PlotName { get; set; }
+        [Required]
+        public string Title { get; set; }
+        public string Subtitle { get; set; }
+        public string Description { get; set; }
 
+        [Required]
         public bool IsCurrent { get; set; }
 
         public ICollection<PlotPoint> PlotPoints

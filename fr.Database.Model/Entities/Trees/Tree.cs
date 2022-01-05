@@ -26,7 +26,10 @@ namespace fr.Database.Model.Entities.Trees
 
         [Required]
         public string CommonName { get; set; }
+        [Required]
         public string ScienceName { get; set; }
+        [Required]
+        public string Family { get; set; }
         public Guid? IconId { get; set; }
         public virtual Icon Icon
         {
