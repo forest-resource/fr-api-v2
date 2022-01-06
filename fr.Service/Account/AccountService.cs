@@ -145,31 +145,29 @@ namespace fr.Service.Account
         public async Task SeedAdminAccount(string adminUsername, string adminPassword)
         {
             var user = await userManager.FindByNameAsync(adminUsername);
-            if (user != null)
+            if (user == null)
             {
-                return;
-            }
+                user = new User
+                {
+                    UserName = adminUsername,
+                    DayOfBird = Clock.Now,
+                    Email = $"{adminUsername}@admin.com",
+                    FirstName = adminUsername,
+                    LastName = adminUsername,
+                    EmailConfirmed = true,
+                    LockoutEnabled = false,
+                    PhoneNumber = string.Empty,
+                    PhoneNumberConfirmed = true,
+                    TwoFactorEnabled = false,
+                    StudentCode = string.Empty
+                };
 
-            user = new User
-            {
-                UserName = adminUsername,
-                DayOfBird = Clock.Now,
-                Email = $"{adminUsername}@admin.com",
-                FirstName = adminUsername,
-                LastName = adminUsername,
-                EmailConfirmed = true,
-                LockoutEnabled = false,
-                PhoneNumber = string.Empty,
-                PhoneNumberConfirmed = true,
-                TwoFactorEnabled = false,
-                StudentCode = string.Empty
-            };
+                var userCreatedResult = await userManager.CreateAsync(user, adminPassword);
 
-            var userCreatedResult = await userManager.CreateAsync(user, adminPassword);
-
-            if (!userCreatedResult.Succeeded)
-            {
-                throw new AppException("Cannot Create Admin Account");
+                if (!userCreatedResult.Succeeded)
+                {
+                    throw new AppException("Cannot Create Admin Account");
+                }
             }
 
             await userManager.AddToRoleAsync(user, ERoles.Administrator.ToString());
