@@ -45,7 +45,27 @@ namespace fr.Service.PlotService
 
         public override async Task<IEnumerable<PlotModel>> GetManyAsync(ExpressionRule model)
         {
-            var result = await GetMany<PlotModel>(model);
+            var plotQuery = model.All(r => r.Value == null)
+                ? Entities.AsNoTracking()
+                : Entities.AsNoTracking().Where(model.Build<Plot>());
+            var plotPointQuery = DbContext.Set<PlotPoint>().AsNoTracking()
+                .Join(plotQuery, r => r.PlotId, r => r.Id, (point, plot) => point);
+            var treeQuery = DbContext.Set<Tree>().AsNoTracking()
+                .Join(plotPointQuery, r => r.Id, r => r.TreeId, (tree, point) => tree)
+                .Distinct();
+
+            var result = plotQuery.Select(plot => new PlotModel
+            {
+                Id = plot.Id,
+                Name = plot.PlotName,
+                Description = plot.Description,
+                IsCurrent = plot.IsCurrent,
+                Subtitle = plot.Subtitle,
+                Title = plot.Title,
+                LastEdited = plot.UpdatedTime,
+                By = plot.UpdatedBy
+            });
+
             return result.ToList();
         }
     }

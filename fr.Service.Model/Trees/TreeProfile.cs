@@ -20,6 +20,7 @@ namespace fr.Service.Model.Trees
             CreateMap<TreeCreateAndUpdateModel, Tree>()
                 .ForMember(r => r.CommonName, source => source.MapFrom(r => r.CommonName))
                 .ForMember(r => r.ScienceName, source => source.MapFrom(r => r.ScienceName))
+                .ForMember(r => r.Family, source => source.MapFrom((r) => r.Family))
                 .ForMember(r => r.IconId, source => source.MapFrom(r => r.IconId))
                 .ForMember(r => r.IsDeleted, source => source.MapFrom(r => false))
                 .ForMember(r => r.TreeDetails, source => source.MapFrom((source, dest) =>

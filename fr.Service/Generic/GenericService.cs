@@ -39,7 +39,8 @@ namespace fr.Service.Generic
 
         public virtual async Task<TModel> UpdateAsync(Guid id, TEntity model)
         {
-            var entity = await Entities.AsNoTracking().SingleOrDefaultAsync(r => r.Id == id);
+            var entity = await Entities.AsNoTracking()
+                .SingleOrDefaultAsync(r => r.Id == id);
 
             if (entity == null)
             {

@@ -40,6 +40,6 @@ namespace fr.AppServer.Controllers.Abstracts
             => Service.GetManyAsync(MapFromModel(model ?? default));
 
         protected ExpressionRule MapFromModel(TSearchModel model)
-            => Mapper.Map<object, ExpressionRule>(model as object);
+            => Mapper.Map<object, ExpressionRule>(model);
     }
 }

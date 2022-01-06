@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using fr.AppServer.Controllers.Abstracts;
 using fr.Database.Model.Entities.Trees;
-using fr.Service.Interfaces;
 using fr.Service.Model.Trees;
+using fr.Service.TreeService;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ namespace fr.AppServer.Controllers
     {
         public TreesController(
             IMapper mapper,
-            IGenericService<Tree, TreeModel> service
+            ITreeService service
             ) : base(mapper, service)
         {
         }
