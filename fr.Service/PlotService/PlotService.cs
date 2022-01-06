@@ -90,8 +90,7 @@ namespace fr.Service.PlotService
                     tree.ScienceName,
                     tree.Family,
                     tree.Icon.IconData
-                })
-                .DistinctBy(r => r.Id);
+                });
 
             var treeDetails = DbContext.Set<TreeDetail>()
                 .Join(currentTrees, r => r.TreeId, r => r.Id, (treeDetail, tree) => new
@@ -100,7 +99,6 @@ namespace fr.Service.PlotService
                     treeDetail.Key,
                     treeDetail.Value
                 })
-                .ToList()
                 .GroupBy(r => r.TreeId, (key, group) => new
                 {
                     key,
@@ -110,6 +108,18 @@ namespace fr.Service.PlotService
                         Value = r.Value,
                     })
                 }).ToDictionary(r => r.key, r => r.group.ToList());
+
+            var treeModels = (await currentTrees.ToListAsync())
+                .DistinctBy(r => r.ScienceName)
+                .Select(r => new TreeModel
+                {
+                    Id = r.Id,
+                    CommonName = r.CommonName,
+                    ScienceName = r.ScienceName,
+                    Family = r.Family,
+                    TreeDetails = treeDetails.ContainsKey(r.Id) ? treeDetails[r.Id] : Array.Empty<TreeDetailModel>(),
+                    IconData = r.IconData
+                }).ToList();
 
             var result = new PlotModel
             {
@@ -121,6 +131,7 @@ namespace fr.Service.PlotService
                 IsCurrent = plot.IsCurrent,
                 LastEdited = plot.UpdatedTime,
                 By = plot.UpdatedBy,
+                Trees = treeModels,
                 PlotPoints = plotPointQuery.Select(r => new PlotPointModel
                 {
                     Id = r.Id,
@@ -132,15 +143,6 @@ namespace fr.Service.PlotService
                     Height = r.Height,
                     TreeId = r.TreeId
                 }).ToList(),
-                Trees = currentTrees.Select(r => new TreeModel
-                {
-                    Id = r.Id,
-                    CommonName = r.CommonName,
-                    ScienceName = r.ScienceName,
-                    Family = r.Family,
-                    TreeDetails = treeDetails.ContainsKey(r.Id) ? treeDetails[r.Id] : Array.Empty<TreeDetailModel>(),
-                    IconData = r.IconData
-                }).ToList()
             };
 
             return result;
