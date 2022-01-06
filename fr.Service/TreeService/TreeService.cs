@@ -6,9 +6,7 @@ using fr.Service.Generic;
 using fr.Service.Model.Trees;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace fr.Service.TreeService
