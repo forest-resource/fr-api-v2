@@ -89,8 +89,9 @@ namespace fr.Service.PlotService
                     tree.CommonName,
                     tree.ScienceName,
                     tree.Family,
-                    IconData = tree.Icon.IconData
-                });
+                    tree.Icon.IconData
+                })
+                .DistinctBy(r => r.Id);
 
             var treeDetails = DbContext.Set<TreeDetail>()
                 .Join(currentTrees, r => r.TreeId, r => r.Id, (treeDetail, tree) => new
