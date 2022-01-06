@@ -6,6 +6,7 @@ using fr.Database.Model.Entities.Icons;
 using fr.Database.Model.Entities.Plots;
 using fr.Database.Model.Entities.Trees;
 using fr.Service.Generic;
+using fr.Service.IconService;
 using fr.Service.Model.Plots;
 using fr.Service.Model.Trees;
 using Microsoft.EntityFrameworkCore;
@@ -18,32 +19,56 @@ namespace fr.Service.PlotService
 {
     internal class PlotService : GenericService<Plot, PlotModel>, IPlotService
     {
-        public PlotService(IDesignTimeDbContextFactory dbContextFactory, IMapper mapper)
-            : base(dbContextFactory, mapper)
-        { }
+        private readonly IIconService iconService;
+        public PlotService(
+            IDesignTimeDbContextFactory dbContextFactory,
+            IMapper mapper,
+            IIconService iconService
+        ) : base(dbContextFactory, mapper)
+        {
+            this.iconService = iconService;
+        }
 
         public override async Task<PlotModel> CreateAsync(Plot model)
         {
-            var treeEntities = DbContext.Set<Tree>().AsNoTracking();
-            var treeNameEntities = await treeEntities.Select(r => r.ScienceName).ToListAsync();
-
-            var trees = model.PlotPoints
-                .Select(r => r.Tree)
-                .GroupBy(r => r.ScienceName)
-                .Select(r => r.First());
-
-            var notAvailableTreeNames = trees
-                .Select(r => r.ScienceName)
-                .GroupJoin(treeNameEntities, r => r, r => r, (s, r) => new { nameFromModel = s, namesFromDb = r })
-                .Where(r => !r.namesFromDb.Any())
-                .Select(r => r.nameFromModel)
+            var modelTrees = model.PlotPoints.Select(r => r.Tree).DistinctBy(r => r.ScienceName).ToList();
+            var trees = DbContext.Set<Tree>().AsNoTracking()
+                .Where(r => modelTrees.Select(r => r.ScienceName).Contains(r.ScienceName))
                 .ToList();
+            var availableIcons = (await iconService.GetAvailableIconsAsync()).ToList();
 
-            var notAvailableTrees = trees.Where(r => notAvailableTreeNames.Any(t => t == r.ScienceName));
+            var currentIconIndex = 0;
+            foreach (var item in model.PlotPoints)
+            {
+                var tree = trees.FirstOrDefault(r => r.ScienceName == item.Tree.ScienceName);
+                if (tree != null)
+                {
+                    item.Tree = null;
+                    item.TreeId = tree.Id;
+                    if ((tree.IconId == null) && (currentIconIndex < availableIcons.Count))
+                    {
+                        tree.IconId = availableIcons[currentIconIndex++].Id;
+                        DbContext.Update(tree);
+                    }
+                    continue;
+                }
+                if (item.Tree.IconId.GetValueOrDefault() == Guid.Empty && currentIconIndex < availableIcons.Count)
+                {
+                    item.Tree.IconId = availableIcons[currentIconIndex++].Id;
+                }
+            }
+            var result = await Entities.AddAsync(model);
+            await DbContext.SaveChangesAsync();
 
-            await DbContext.AddRangeAsync(notAvailableTrees);
+            foreach (var point in result.Entity.PlotPoints)
+            {
+                if (point.Tree == null)
+                {
+                    point.Tree = trees.FirstOrDefault(tree => tree.Id == point.TreeId);
+                }
+            }
 
-            return await base.CreateAsync(model);
+            return _mapper.Map<Plot, PlotModel>(result.Entity);
         }
 
         public override async Task<IEnumerable<PlotModel>> GetManyAsync(ExpressionRule model)
