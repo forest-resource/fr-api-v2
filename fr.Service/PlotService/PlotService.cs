@@ -10,6 +10,7 @@ using fr.Service.IconService;
 using fr.Service.Model.Plots;
 using fr.Service.Model.Trees;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,27 +37,41 @@ namespace fr.Service.PlotService
                 .Where(r => modelTrees.Select(r => r.ScienceName).Contains(r.ScienceName))
                 .ToList();
             var availableIcons = (await iconService.GetAvailableIconsAsync()).ToList();
-
             var currentIconIndex = 0;
-            foreach (var item in model.PlotPoints)
+
+            foreach (var tree in modelTrees)
             {
-                var tree = trees.FirstOrDefault(r => r.ScienceName == item.Tree.ScienceName);
-                if (tree != null)
+                var treeEntity = trees.FirstOrDefault(r => r.ScienceName == tree.ScienceName);
+                if (treeEntity != null)
                 {
-                    item.Tree = null;
-                    item.TreeId = tree.Id;
-                    if ((tree.IconId == null) && (currentIconIndex < availableIcons.Count))
+                    if (treeEntity.IconId.GetValueOrDefault() == Guid.Empty && currentIconIndex < availableIcons.Count)
                     {
-                        tree.IconId = availableIcons[currentIconIndex++].Id;
-                        DbContext.Update(tree);
+                        treeEntity.IconId = availableIcons[currentIconIndex++].Id;
+                        var treeEntry = DbContext.Update(treeEntity);
+                        UpdatePlotPoint(model.PlotPoints, treeEntry.Entity);
                     }
-                    continue;
+                    else
+                    {
+                        UpdatePlotPoint(model.PlotPoints, treeEntity);
+                    }
                 }
-                if (item.Tree.IconId.GetValueOrDefault() == Guid.Empty && currentIconIndex < availableIcons.Count)
+                else
                 {
-                    item.Tree.IconId = availableIcons[currentIconIndex++].Id;
+                    treeEntity = tree;
+                    if (treeEntity.IconId.GetValueOrDefault() == Guid.Empty && currentIconIndex < availableIcons.Count)
+                    {
+                        treeEntity.IconId = availableIcons[currentIconIndex++].Id;
+                        var treeEntry = await DbContext.AddAsync(treeEntity);
+                        UpdatePlotPoint(model.PlotPoints, treeEntry.Entity);
+                    }
+                    else
+                    {
+                        UpdatePlotPoint(model.PlotPoints, treeEntity);
+                    }
                 }
+
             }
+
             var result = await Entities.AddAsync(model);
             await DbContext.SaveChangesAsync();
 
@@ -171,6 +186,15 @@ namespace fr.Service.PlotService
             };
 
             return result;
+        }
+
+        private static void UpdatePlotPoint(ICollection<PlotPoint> plotPoints, Tree entityEntry)
+        {
+            foreach (var point in plotPoints.Where(r => r.Tree?.ScienceName == entityEntry.ScienceName))
+            {
+                point.TreeId = entityEntry.Id;
+                point.Tree = null;
+            }
         }
     }
 }
